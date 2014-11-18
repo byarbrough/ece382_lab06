@@ -1,0 +1,37 @@
+initializations
+	#include
+	
+struct for direction?
+	contains left motor direction
+	contains right motor direction
+	contains time
+
+void main(){
+	initializeRobot();
+	
+	call functions for movement
+	turn();
+}
+
+void initializeRobot(){
+	stop watchdog timer
+	
+	set input and output pins
+	
+	clear interrupt flags
+	
+	configure Timer A to set/reset
+	
+	_enable_interrupt();
+}
+
+void turn(){
+	switch direction{
+		set pins for motor direction
+		reset timer A overflow
+	}
+	
+	while(wait for turn time)
+}
+	
+	
