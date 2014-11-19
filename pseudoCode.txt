@@ -1,5 +1,8 @@
 initializations
 	#include
+	
+enumerated command with forward, back, leftT, rightT, stop
+
 #define
 	turn left	2.0 | 2.5 | 2.1 | 1.2 | 2.3 | 1.4
 	turn right
@@ -19,7 +22,7 @@ void main(){
 	initializeRobot();
 	
 	call functions for movement
-	turn();
+	drive(command, time);
 }
 
 void initializeRobot(){
@@ -37,10 +40,12 @@ void initializeRobot(){
 	_enable_interrupt();
 }
 
-void turn(){
-	switch direction{
-		set pins for motor direction
+void drive(command movement, int time){
+	switch (movement){
+		case xx: set pins for motor direction
 			and with defined statements from above
+		default: STOP
+		
 		reset timer A overflow
 	}
 	
