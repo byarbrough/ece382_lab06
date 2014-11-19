@@ -1,10 +1,19 @@
 initializations
 	#include
+#define
+	turn left	2.0 | 2.5 | 2.1 | 1.2 | 2.3 | 1.4
+	turn right
+	driveForward
+	driveBack
+	stop		disable both motors
 	
-struct for direction?
-	contains left motor direction
-	contains right motor direction
-	contains time
+			LEFT enabled by 2.0
+			forward 2.1, and 1.2
+			back is 2.2, 1.1
+			RIGHT enabled by 2.5
+			forward is 2.4, 1.3
+			back is 2.3, 1.4
+
 
 void main(){
 	initializeRobot();
@@ -17,6 +26,9 @@ void initializeRobot(){
 	stop watchdog timer
 	
 	set input and output pins
+		2.6 input
+		1.1-1.4 output
+		2.0-2.5 output
 	
 	clear interrupt flags
 	
@@ -28,6 +40,7 @@ void initializeRobot(){
 void turn(){
 	switch direction{
 		set pins for motor direction
+			and with defined statements from above
 		reset timer A overflow
 	}
 	
