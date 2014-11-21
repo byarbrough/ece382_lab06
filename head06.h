@@ -4,6 +4,11 @@
  *  Created on: Nov 20, 2014
  *      Author: C16Brian.Yarbrough
  */
+#include <msp430.h>
+
+#ifndef HEAD06_H_
+#define HEAD06_H_
+
 
 typedef		unsigned char		int8;
 typedef		unsigned short		int16;
@@ -12,13 +17,13 @@ typedef		unsigned long long	int64;
 
 //different motor commands for the robot
 typedef enum	{FORWARD, BACKWARD, LEFT_T, RIGHT_T, STOP} direction;
-#define		EN_MOTOR_L
-#define		EN_MOTOR_R
-#define		GO_FORWARD
-#define		GO_BACKWARD
-#define		GO_LEFT
-#define		GO_RIGHT
-#define		GO_STOP
+#define		EN_MOTOR_L		P1OUT |= BIT4
+#define		EN_MOTOR_R		P1OUT |= BIT5
+#define		GO_FORWARD		P1OUT &= BIT0 | BIT2 | BIT4 | BIT5
+#define		GO_BACKWARD		P1OUT &= BIT1 | BIT3 | BIT4 | BIT5
+#define		GO_LEFT			P1OUT &= BIT0 | BIT3 | BIT4 | BIT5
+#define		GO_RIGHT		P1OUT &= BIT1 | BIT2 | BIT4 | BIT5
+#define		GO_STOP			P1OUT &= BIT4 | BIT5
 
 #define		TRUE				1
 #define		FALSE				0
@@ -44,13 +49,5 @@ __interrupt void timerOverflow (void);
 #define		EXIT	0x20DFDA25 //0x0AF508F7
 
 void drive(direction movement, int16 duration);
-
-
-#ifndef HEAD06_H_
-#define HEAD06_H_
-
-
-
-
 
 #endif /* HEAD06_H_ */

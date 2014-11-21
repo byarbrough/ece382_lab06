@@ -21,6 +21,10 @@ void main(void) {
 
 }
 
+/*
+ * TACCR1 is the duty cycle %.
+ * It must be < 60 to prevent burning the motor chip
+ */
 void initMSP430(){
 	IFG1=0; 					// clear interrupt flag1
 	WDTCTL=WDTPW+WDTHOLD; 		// stop WD
@@ -29,10 +33,29 @@ void initMSP430(){
 	DCOCTL = CALDCO_8MHZ;
 
 	//set as output pins
-	P2DIR |= BIT0 | BIT1 | BIT2 | BIT3 | BIT4 | BIT5
+	P1DIR |= BIT0 | BIT1 | BIT2 | BIT3 | BIT4 | BIT5;
 
-	P2OUT &= GO_STOP					//ensure motors are stopped
-	P2OUT |= EN_MOTOR_L | EN_MOTOR_R	//endable both motors
+	GO_STOP;					//ensure motors are stopped
+	EN_MOTOR_L;
+	EN_MOTOR_R;					//enable both motors
+
+	//Timer A
+	P1DIR |= BIT6;                // TA0CCR1 on P1.6
+	P1SEL |= BIT6;                // TA0CCR1 on P1.6
+
+	TACTL &= ~MC1|MC0;            // stop timer A0
+
+	TACTL |= TACLR;                // clear timer A0
+
+	TACTL |= TASSEL1;           // configure for SMCLK
+
+	TACCR0 = 100;                // set signal period to 100 clock cycles (~100 microseconds)
+	TACCR1 = 25;                // set duty cycle to 25/100 (25%)
+
+	TACCTL1 |= OUTMOD_7;        // set TACCTL1 to Reset / Set mode
+
+	TACTL |= MC0;                // count up
+
 
 }
 
