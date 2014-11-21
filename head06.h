@@ -11,7 +11,9 @@ typedef		unsigned long		int32;
 typedef		unsigned long long	int64;
 
 //different motor commands for the robot
-typedef enum	{FORWARD, BACKWARD, LEFT, RIGHT, STOP} direction;
+typedef enum	{FORWARD, BACKWARD, LEFT_T, RIGHT_T, STOP} direction;
+#define		EN_MOTOR_L
+#define		EN_MOTOR_R
 #define		GO_FORWARD
 #define		GO_BACKWARD
 #define		GO_LEFT
@@ -41,7 +43,7 @@ __interrupt void timerOverflow (void);
 #define		MUTE	0x20DF8D72 //0x0AF5D02F
 #define		EXIT	0x20DFDA25 //0x0AF508F7
 
-void drive();
+void drive(direction movement, int16 duration);
 
 
 #ifndef HEAD06_H_
