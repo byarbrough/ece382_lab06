@@ -19,11 +19,11 @@ typedef		unsigned long long	int64;
 typedef enum	{FORWARD, BACKWARD, LEFT_T, RIGHT_T, STOP} direction;
 #define		EN_MOTOR_L		P1OUT |= BIT4
 #define		EN_MOTOR_R		P1OUT |= BIT5
-#define		GO_FORWARD		P1OUT &= BIT0 | BIT2 | BIT4 | BIT5
-#define		GO_BACKWARD		P1OUT &= BIT1 | BIT3 | BIT4 | BIT5
-#define		GO_LEFT			P1OUT &= BIT0 | BIT3 | BIT4 | BIT5
-#define		GO_RIGHT		P1OUT &= BIT1 | BIT2 | BIT4 | BIT5
-#define		GO_STOP			P1OUT &= BIT4 | BIT5
+#define		GO_FORWARD		P1OUT = BIT0 | BIT2 | BIT4 | BIT5
+#define		GO_BACKWARD		P1OUT = BIT1 | BIT3 | BIT4 | BIT5
+#define		GO_LEFT			P1OUT = BIT0 | BIT3 | BIT4 | BIT5
+#define		GO_RIGHT		P1OUT = BIT1 | BIT2 | BIT4 | BIT5
+#define		GO_STOP			P1OUT = BIT4 | BIT5
 
 #define		TRUE				1
 #define		FALSE				0
