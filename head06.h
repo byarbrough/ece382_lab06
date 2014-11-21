@@ -48,6 +48,6 @@ __interrupt void timerOverflow (void);
 #define		MUTE	0x20DF8D72 //0x0AF5D02F
 #define		EXIT	0x20DFDA25 //0x0AF508F7
 
-void drive(direction movement, int16 duration);
+void drive(direction movement);
 
 #endif /* HEAD06_H_ */

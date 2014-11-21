@@ -19,6 +19,21 @@ void main(void) {
 	
     initMSP430();				//initialize system
 
+    while(1){
+    drive(FORWARD);
+		__delay_cycles(1000000);
+		GO_STOP;
+		drive(LEFT_T);
+		__delay_cycles(1000000);
+		GO_STOP;
+		drive(BACKWARD);
+		__delay_cycles(1000000);
+		GO_STOP;
+		drive(RIGHT_T);
+		__delay_cycles(1000000);
+		GO_STOP;
+    }
+
 }
 
 /*
@@ -40,36 +55,46 @@ void initMSP430(){
 	EN_MOTOR_R;					//enable both motors
 
 	//Timer A
-	P1DIR |= BIT6;                // TA0CCR1 on P1.6
-	P1SEL |= BIT6;                // TA0CCR1 on P1.6
+	P2DIR |= BIT3;                // TA0CCR1 on P2.3
+	P2SEL |= BIT3;                // TA0CCR1 on P2.3
+	P2IFG &= ~BIT3;				//clear interrupt flag
+	P2IE |= BIT3;				//enable interrupt on bin change
 
 	TACTL &= ~MC1|MC0;            // stop timer A0
-
 	TACTL |= TACLR;                // clear timer A0
-
 	TACTL |= TASSEL1;           // configure for SMCLK
 
-	TACCR0 = 100;                // set signal period to 100 clock cycles (~100 microseconds)
+	TACCR0 = 100;                // set signal period to 100 clock cycles
 	TACCR1 = 25;                // set duty cycle to 25/100 (25%)
 
-	TACCTL1 |= OUTMOD_7;        // set TACCTL1 to Reset / Set mode
+	TACCTL1 |= OUTMOD_3;        // set TACCTL1 to Set / Reset mode
 
-	TACTL |= MC0;                // count up
+	TACTL = ID_3 | TASSEL_2 | MC_1 | TAIE;
 
+	_enable_interrupt();
 
 }
 
-void drive(direction movement, int16 duration){
+void drive(direction movement){
 	switch(movement){
 	case	FORWARD:
+		GO_FORWARD;
 		break;
 	case	BACKWARD:
+		GO_BACKWARD;
 		break;
 	case	LEFT_T:
+		GO_LEFT;
 		break;
 	case	RIGHT_T:
+		GO_RIGHT;
 		break;
 	case	STOP:
+		GO_STOP;
 		break;
 	}
 }
+
+
+
+
