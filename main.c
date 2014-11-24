@@ -19,14 +19,18 @@ void main(void) {
 	
     initMSP430();				//initialize system
 
-
     drive(FORWARD);
     _delay_cycles(LONG_T);
 
 
-    GO_STOP;
+    drive(RIGHT_T);
+    _delay_cycles(LONG_T);
+
+    drive(LEFT_T);
 
     drive(BACKWARD);
+
+    GO_STOP;
 
     while(1){
 
@@ -72,7 +76,6 @@ void initMSP430(){
 void drive(direction movement){
 	GO_STOP;
 	_delay_cycles(SHORT_T);
-	ENABLE_MOTORS;
 
 	switch(movement){
 	case	FORWARD:
@@ -80,20 +83,31 @@ void drive(direction movement){
 		TA1CCTL2 = OUTMOD_7;
 		GO_FORWARD;
 		break;
+
 	case	BACKWARD:
 		TA1CCTL1 = OUTMOD_3;
 		TA1CCTL2 = OUTMOD_3;
 		GO_BACKWARD;
 		break;
+
 	case	LEFT_T:
-
+		TA1CCTL1 = OUTMOD_7;
+		TA1CCTL2 = OUTMOD_3;
+		GO_LEFT;
 		break;
+
 	case	RIGHT_T:
-
+		TA1CCTL1 = OUTMOD_3;
+		TA1CCTL2 = OUTMOD_7;
+		GO_RIGHT
 		break;
+
 	case	STOP:
+		GO_STOP;
 		break;
 	}
+
+	ENABLE_MOTORS;
 }
 
 
