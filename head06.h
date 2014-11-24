@@ -17,13 +17,14 @@ typedef		unsigned long long	int64;
 
 //different motor commands for the robot
 typedef enum	{FORWARD, BACKWARD, LEFT_T, RIGHT_T, STOP} direction;
-#define		EN_MOTOR_L		P1OUT |= BIT4
-#define		EN_MOTOR_R		P1OUT |= BIT5
-#define		GO_FORWARD		P1OUT = BIT0 | BIT2
-#define		GO_BACKWARD		P1OUT = BIT1 | BIT3
-#define		GO_LEFT			P1OUT = BIT0 | BIT3
-#define		GO_RIGHT		P1OUT = BIT1 | BIT2
-#define		GO_STOP			P1OUT = BIT4 | BIT5
+#define		ENABLE_MOTORS	P2OUT |= BIT0 | BIT5;
+#define		GO_FORWARD		P2OUT |= BIT1 | BIT3;
+#define		GO_BACKWARD		P2OUT &= ~(BIT1 | BIT3);
+#define		GO_LEFT			1
+#define		GO_RIGHT		1
+#define		GO_STOP			P2OUT &= ~(BIT0 | BIT5);
+#define		LONG_T			0x100000
+#define		SHORT_T			0x50000
 
 #define		TRUE				1
 #define		FALSE				0

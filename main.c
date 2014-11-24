@@ -19,7 +19,14 @@ void main(void) {
 	
     initMSP430();				//initialize system
 
+
     drive(FORWARD);
+    _delay_cycles(LONG_T);
+
+
+    GO_STOP;
+
+    drive(BACKWARD);
 
     while(1){
 
@@ -48,8 +55,7 @@ void initMSP430(){
     P2SEL |= BIT4;							// P2.4 is associated with TA1CCTL2
 
     //ports for direction
-    P2DIR |= BIT1 | BIT3;
-    P2OUT &= ~(BIT1 | BIT3);
+    P2DIR |= BIT0 | BIT1 | BIT3 | BIT5;
 
 	TA1CTL = ID_3 | TASSEL_2 | MC_1;		// Use 1:8 presclar off MCLK
     TA1CCR0 = 0x0100;						// set signal period
@@ -64,22 +70,20 @@ void initMSP430(){
 }
 
 void drive(direction movement){
+	GO_STOP;
+	_delay_cycles(SHORT_T);
+	ENABLE_MOTORS;
 
-    while (1) {
-
-    	while((P1IN & BIT3) != 0);			// Wait for a button press
-    	while((P1IN & BIT3) == 0);			// and release
-
-        TA1CCR1 = (TA1CCR1 + 0x010) & 0xFF;	// increase duty cycle
-        TA1CCR2 = (TA1CCR2 + 0x010) & 0xFF;	// decrease duty cycle
-
-    } // end loop
-
-	/*switch(movement){
+	switch(movement){
 	case	FORWARD:
+		TA1CCTL1 = OUTMOD_7;
+		TA1CCTL2 = OUTMOD_7;
 		GO_FORWARD;
 		break;
 	case	BACKWARD:
+		TA1CCTL1 = OUTMOD_3;
+		TA1CCTL2 = OUTMOD_3;
+		GO_BACKWARD;
 		break;
 	case	LEFT_T:
 
@@ -89,7 +93,7 @@ void drive(direction movement){
 		break;
 	case	STOP:
 		break;
-	}*/
+	}
 }
 
 
