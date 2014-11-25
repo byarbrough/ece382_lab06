@@ -24,6 +24,7 @@ void main(void) {
     P1DIR |= BIT0 | BIT6;				// Enable updates to the LED
    	P1OUT &= ~(BIT0 | BIT6);			// An turn the LED off
 
+   	GO_STOP;
 
     _delay_cycles(LONG_T);		//wait to start
 
@@ -44,6 +45,8 @@ void main(void) {
     while(1){
     	if(packetIndex == 34){
     		handlePress();
+    		_delay_cycles(LONG_T);
+    		initIR();
     	}
     }
 
@@ -117,8 +120,6 @@ void handlePress(){
 
 	packetIndex++;							//ensure the loop is not reentered
 
-	initMSP430();							//reinitialize motors
-
 	switch(result){							//take appropriate action
 
 	case UP:
@@ -156,6 +157,8 @@ void handlePress(){
 	case MUTE:
 		break;
 	}
+
+	initIR();
 
 }
 
