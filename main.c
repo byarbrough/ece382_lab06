@@ -123,26 +123,26 @@ void handlePress(){
 
 	case UP:
 		P1OUT ^= BIT0;
-
+		drive(FORWARD);
 		break;
 
 	case DOWN:
 		P1OUT ^= BIT6;
-
+		drive(BACKWARD);
 		break;
 
 	case LEFT:
 		P1OUT |= (BIT0 | BIT6);
-
+		drive(LEFT_T);
 		break;
 
 	case RIGHT:
 		P1OUT ^= (BIT0 | BIT6);
-
+		drive(RIGHT_T);
 		break;
 
 	case EXIT:
-
+		drive(STOP);
 		break;
 
 	case CH_UP:
