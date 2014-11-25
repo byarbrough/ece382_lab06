@@ -10,7 +10,8 @@
 #include <msp430g2553.h>
 #include "head06.h"
 
-
+int16	packetData[34];
+int8	packetIndex = 0;
 
 /*
  * main.c
@@ -18,8 +19,15 @@
 void main(void) {
 	
     initMSP430();				//initialize system
+    initIR();
 
-    drive(FORWARD);
+    P1DIR |= BIT0 | BIT6;				// Enable updates to the LED
+   	P1OUT &= ~(BIT0 | BIT6);			// An turn the LED off
+
+
+    _delay_cycles(LONG_T);		//wait to start
+
+    /*drive(FORWARD);
     _delay_cycles(RLONG_T);
 
     drive(RIGHT_T);
@@ -31,10 +39,12 @@ void main(void) {
     drive(BACKWARD);
     _delay_cycles(RLONG_T);
 
-    GO_STOP;
+    GO_STOP;*/
 
     while(1){
-
+    	if(packetIndex == 34){
+    		handlePress();
+    	}
     }
 
 }
@@ -70,7 +80,82 @@ void initMSP430(){
 
     TA1CCR2 = 0x0020;
     TA1CCTL2 = OUTMOD_3;					// set TACCTL1 to Reset / Set mode
+}
 
+void initIR(){
+    //IR Pins
+    P2SEL  &= ~BIT6;						// Setup P2.6 as GPIO not XIN
+    P2SEL2 &= ~BIT6;
+    P2DIR &= ~BIT6;
+    P2IFG &= ~BIT6;						// Clear any interrupt flag
+    P2IE  |= BIT6;						// Enable PORT 2 interrupt on pin change
+    TACTL &= ~TAIFG;					// clear flag before enabling interrupts = good practice
+    TACTL = ID_3 | TASSEL_2 | MC_1 | TAIE;		// Use 1:1 presclar off MCLK and enable interrupts
+
+    _enable_interrupt();
+}
+
+
+void handlePress(){
+	_disable_interrupt();
+	int32 result = 0;
+	int32 setter = 0x80000000;				//1 in the MSB
+
+	char i;
+	for(i = 2; i<34; i++){					//traverse array
+		int16 current = packetData[i];		//current element
+		packetData[0] = 0;					//clear element
+
+		if(current/10 < 100){				//is a zero
+			result &= ~setter;				//clear bit
+		}
+		else {
+			result |= setter;				//set bit
+		}
+		setter >>= 1;						//rotate setter
+		}
+
+	packetIndex++;							//ensure the loop is not reentered
+
+	initMSP430();							//reinitialize motors
+
+	switch(result){							//take appropriate action
+
+	case UP:
+		P1OUT ^= BIT0;
+
+		break;
+
+	case DOWN:
+		P1OUT ^= BIT6;
+
+		break;
+
+	case LEFT:
+		P1OUT |= (BIT0 | BIT6);
+
+		break;
+
+	case RIGHT:
+		P1OUT ^= (BIT0 | BIT6);
+
+		break;
+
+	case EXIT:
+
+		break;
+
+	case CH_UP:
+
+		break;
+
+	case CH_DW:
+
+		break;
+
+	case MUTE:
+		break;
+	}
 
 }
 
@@ -102,7 +187,7 @@ void drive(direction movement){
 		TA1CCTL1 = OUTMOD_3;
 		TA1CCTL2 = OUTMOD_7;
 		GO_FORWARD;
-		GO_RIGHT
+		GO_RIGHT;
 		break;
 
 	case	STOP:
@@ -113,6 +198,53 @@ void drive(direction movement){
 	ENABLE_MOTORS;
 }
 
+#pragma vector = PORT2_VECTOR			// This is from the MSP430G2553.h file
+__interrupt void pinChange (void) {
 
+	int8	pin;
+	int16	pulseDuration;			// The timer is 16-bits
+
+	if (IR_PIN)		pin=1;	else pin=0;
+
+	switch (pin) {					// read the current pin level
+		case 0:						// !!!!!!!!!NEGATIVE EDGE!!!!!!!!!!
+			pulseDuration = TAR;
+			TACTL = 0;
+			packetData[packetIndex++] = pulseDuration;
+			LOW_2_HIGH; 				// Setup pin interrupr on positive edge
+			break;
+
+		case 1:							// !!!!!!!!POSITIVE EDGE!!!!!!!!!!!
+			TAR = 0x0000;						// time measurements are based at time 0
+			TA0CCR0 = 0xFF00;					// create a 16mS roll-over period
+			TACTL &= ~TAIFG;					// clear flag before enabling interrupts = good practice
+			TACTL = ID_3 | TASSEL_2 | MC_1 | TAIE;		// Use 1:1 presclar off MCLK and enable interrupts
+			HIGH_2_LOW; 						// Setup pin interrupr on positive edge
+			break;
+	} // end switch
+
+
+	P2IFG &= ~BIT6;			// Clear the interrupt flag to prevent immediate ISR re-entry
+
+} // end pinChange ISR
+
+
+
+// -----------------------------------------------------------------------
+// This interrupt is a way of reseting the reciever when something gets messed up
+// It also resets packetIndex after the final pulse is recieved
+// It is only active while IRPIN is high
+//
+// -----------------------------------------------------------------------
+#pragma vector = TIMER0_A1_VECTOR			// This is from the MSP430G2553.h file
+__interrupt void timerOverflow (void) {
+
+	initMSP430();
+
+	packetIndex = 0;
+
+	TACTL &= ~TAIFG;		//clear flag
+
+}
 
 

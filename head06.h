@@ -17,12 +17,12 @@ typedef		unsigned long long	int64;
 
 //different motor commands for the robot
 typedef enum	{FORWARD, BACKWARD, LEFT_T, RIGHT_T, STOP} direction;
-#define		ENABLE_MOTORS	P2OUT |= BIT0 | BIT5;
-#define		GO_FORWARD		P2OUT |= BIT1 | BIT3;
-#define		GO_BACKWARD		P2OUT &= ~(BIT1 | BIT3);
-#define		GO_LEFT			P2OUT &= ~BIT3;
-#define		GO_RIGHT		P2OUT &= ~BIT1;
-#define		GO_STOP			P2OUT &= ~(BIT0 | BIT5);
+#define		ENABLE_MOTORS	P2OUT |= BIT0 | BIT5
+#define		GO_FORWARD		P2OUT |= BIT1 | BIT3
+#define		GO_BACKWARD		P2OUT &= ~(BIT1 | BIT3)
+#define		GO_LEFT			P2OUT &= ~BIT3
+#define		GO_RIGHT		P2OUT &= ~BIT1
+#define		GO_STOP			P2OUT &= ~(BIT0 | BIT5)
 #define		RLONG_T			0x2000000
 #define		LONG_T			0x400000
 #define		SHORT_T			0x200000
@@ -31,6 +31,8 @@ typedef enum	{FORWARD, BACKWARD, LEFT_T, RIGHT_T, STOP} direction;
 #define		FALSE				0
 
 void initMSP430();
+void initIR();
+void handlePress();
 __interrupt void pinChange (void);
 __interrupt void timerOverflow (void);
 
