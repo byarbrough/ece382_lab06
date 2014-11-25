@@ -20,7 +20,7 @@ void main(void) {
     initMSP430();				//initialize system
 
     drive(FORWARD);
-    _delay_cycles(LONG_T);
+    _delay_cycles(RLONG_T);
 
     drive(RIGHT_T);
     _delay_cycles(LONG_T);
@@ -29,7 +29,7 @@ void main(void) {
     _delay_cycles(LONG_T);
 
     drive(BACKWARD);
-    _delay_cycles(LONG_T);
+    _delay_cycles(RLONG_T);
 
     GO_STOP;
 
