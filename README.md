@@ -42,6 +42,7 @@ Furthermore, it turns out that a LOW output can be treated as a ground, so I did
 ##Required Functionality
 This lab was a good combination of DIY and some helpful hints from the powers that be. I had some initial issues figuring out which power to connect to which VCC on the motor chip, but Sabin Park (they man, the myth, the legend) helped me out.
 I also was sure to include the noise reducing capacitors recommended by the instructors:
+
 1. Between the motor inputs and ground
 2. One electrolytic across each power supply
 3. Between the Reset pin and ground
