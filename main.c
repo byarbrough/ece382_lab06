@@ -15,6 +15,8 @@ int8	packetIndex = 0;
 
 /*
  * main.c
+ * Initializes the robot
+ * Waits for a new IR packet to be recieved, then handles the request
  */
 void main(void) {
 	
@@ -37,6 +39,9 @@ void main(void) {
 }
 
 /*
+* initMSP430()
+* Responsible for configuring pins to timers and enables interrupts
+* Must be called prior to driving motors
  * TACCR1 is the duty cycle %.
  * It must be < 60 to prevent burning the motor chip
  */
@@ -69,6 +74,11 @@ void initMSP430(){
     TA1CCTL2 = OUTMOD_3;					// set TACCTL1 to Reset / Set mode
 }
 
+/*
+* initIR()
+*readies the IR sensor to recieve a signal from the remote
+* must be recalled after initMSP430() is called
+*/
 void initIR(){
     //IR Pins
     P2SEL  &= ~BIT6;						// Setup P2.6 as GPIO not XIN
@@ -82,7 +92,12 @@ void initIR(){
     _enable_interrupt();
 }
 
-
+/*
+* handlePress()
+* copied from Lab05
+* decodes which button was pressed on remote
+* modified to call appropriate drive function
+*/
 void handlePress(){
 	_disable_interrupt();
 	int32 result = 0;
@@ -146,6 +161,10 @@ void handlePress(){
 
 }
 
+/*
+* drive()
+* accepts a direction and moves the robot in that direction
+*/
 void drive(direction movement){
 	GO_STOP;
 	_delay_cycles(SHORT_T);
@@ -185,6 +204,9 @@ void drive(direction movement){
 	ENABLE_MOTORS;
 }
 
+/*
+* interrupt for the PWM
+*/
 #pragma vector = PORT2_VECTOR			// This is from the MSP430G2553.h file
 __interrupt void pinChange (void) {
 
@@ -222,6 +244,7 @@ __interrupt void pinChange (void) {
 // It also resets packetIndex after the final pulse is recieved
 // It is only active while IRPIN is high
 //
+// Only active when IR pin is being read
 // -----------------------------------------------------------------------
 #pragma vector = TIMER0_A1_VECTOR			// This is from the MSP430G2553.h file
 __interrupt void timerOverflow (void) {
