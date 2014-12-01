@@ -22,7 +22,7 @@ Essentially, when enable is high, the output mirrors the input. This means that 
 Misunderstanding the tech doc led me to believe that I could not apply an effectively negative voltage to the input; it must be either HIGH or LOW, which meant that I had to be very creative to run current the opposite direction through the DC motor in order to control direction.
 
 Here is the resulting schematic:
-![alt text]( "Original Schematic")
+![alt text](https://raw.githubusercontent.com/byarbrough/ece382_lab06/master/circuit_prelab.jpg "Original Schematic")
 
 Let me just say, I was extremely excited about this masterpiece. The transistors are NMOS MOSFET transistors. BS-170, to be exact, with a threshold voltage of 2.1 volts, the 3.3 V output would have been enough to turn these on. This would have opened the correct path to ground, and this combined with toggling which PWM signal was being outputted, would have forced current to run through the motor the proper direction.
 
@@ -35,7 +35,7 @@ As it turned out, this prelab was educational and very entertaining, but not ult
 
 Furthermore, it turns out that a LOW output can be treated as a ground, so I didn't need transistors at all (though I still think they would have been AWESOME). This means that I could greatly simplify my schematic:
 
-![alt text]( "Realized Schematic")
+![alt text](https://raw.githubusercontent.com/byarbrough/ece382_lab06/master/circuit_lab.jpg "Realized Schematic")
 
 *****
 
