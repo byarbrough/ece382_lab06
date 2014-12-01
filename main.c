@@ -180,7 +180,7 @@ void drive(direction movement){
 	case	STOP:
 		GO_STOP;
 		break;
-	}
+	}//end switch
 
 	ENABLE_MOTORS;
 }
